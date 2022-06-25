@@ -3,6 +3,8 @@ namespace App\Http\Controllers;
 
 use App\Models\BlogPost;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class BlogPostController extends Controller
 {
@@ -26,7 +28,7 @@ class BlogPostController extends Controller
         $newPost = BlogPost::create([
             'title' => $request->title,
             'body' => $request->body,
-            'user_id' => 1
+            'user_id' => Auth::id()
         ]);
 
         return redirect('blog/' . $newPost->id);
@@ -42,6 +44,9 @@ class BlogPostController extends Controller
     
     public function edit(BlogPost $blogPost)
     {
+        if (! Gate::allows('own-post', $blogPost)) {
+            abort(403);
+        }
         return view('blog.edit', [
             'post' => $blogPost,
         ]);
@@ -50,6 +55,10 @@ class BlogPostController extends Controller
     
     public function update(Request $request, BlogPost $blogPost)
     {
+        if (! Gate::allows('own-post', $blogPost)) {
+            abort(403);
+        }
+
         $blogPost->update([
             'title' => $request->title,
             'body' => $request->body
@@ -61,6 +70,10 @@ class BlogPostController extends Controller
     
     public function destroy(BlogPost $blogPost)
     {
+        if (! Gate::allows('own-post', $blogPost)) {
+            abort(403);
+        }
+        
         $blogPost->delete();
 
         return redirect('/blog');

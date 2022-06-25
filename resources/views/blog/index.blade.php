@@ -6,19 +6,21 @@
                  <div class="row">
                     <div class="col-8">
                         <h1 class="display-one">Our Blog!</h1>
-                        <p>Enjoy reading our posts. Click on a post to read!</p>
+                        <p>{{ __('Enjoy reading our posts. Click on a post to read!') }}</p>
                     </div>
-                    <div class="col-4">
-                        <p>Create new Post</p>
-                        <a href="/blog/create/post" class="btn btn-primary btn-sm">Add Post</a>
-                    </div>
+                    @auth
+                        <div class="col-4">
+                            <p>{{ __('Create new Post') }}</p>
+                            <a href="/blog/create/post" class="btn btn-primary btn-sm">{{ __('Add Post') }}</a>
+                        </div>
+                    @endauth
                 </div>                
                 @forelse($posts as $post)
                     <ul>
                         <li><a href="./blog/{{ $post->id }}">{{ ucfirst($post->title) }}</a></li>
                     </ul>
                 @empty
-                    <p class="text-warning">No blog Posts available</p>
+                    <p class="text-warning">{{ __('No blog Posts available') }}</p>
                 @endforelse
             </div>
         </div>

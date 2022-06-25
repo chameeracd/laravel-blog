@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -19,8 +20,11 @@ Route::get('/', function () {
 
 Route::get('/blog', [\App\Http\Controllers\BlogPostController::class, 'index']);
 Route::get('/blog/{blogPost}', [\App\Http\Controllers\BlogPostController::class, 'show']);
-Route::get('/blog/create/post', [\App\Http\Controllers\BlogPostController::class, 'create']);
-Route::post('/blog/create/post', [\App\Http\Controllers\BlogPostController::class, 'store']);
-Route::get('/blog/{blogPost}/edit', [\App\Http\Controllers\BlogPostController::class, 'edit']);
-Route::put('/blog/{blogPost}/edit', [\App\Http\Controllers\BlogPostController::class, 'update']);
-Route::delete('/blog/{blogPost}', [\App\Http\Controllers\BlogPostController::class, 'destroy']);
+Route::get('/blog/create/post', [\App\Http\Controllers\BlogPostController::class, 'create'])->middleware('auth');
+Route::post('/blog/create/post', [\App\Http\Controllers\BlogPostController::class, 'store'])->middleware('auth');
+Route::get('/blog/{blogPost}/edit', [\App\Http\Controllers\BlogPostController::class, 'edit'])->middleware('auth');
+Route::put('/blog/{blogPost}/edit', [\App\Http\Controllers\BlogPostController::class, 'update'])->middleware('auth');
+Route::delete('/blog/{blogPost}', [\App\Http\Controllers\BlogPostController::class, 'destroy'])->middleware('auth');
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
