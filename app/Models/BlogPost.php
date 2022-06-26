@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Gate;
 
 class BlogPost extends Model
 {
@@ -17,5 +16,11 @@ class BlogPost extends Model
         return BlogPost::where('user_id', '=', Auth::id())->get();
     }
     
-
+    /**
+     * Get the use that owns the blog post.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
