@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\BlogPost;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -94,6 +95,31 @@ class AuthTest extends TestCase
         $response = $this->get('/blog/create/post');
         $response->assertStatus(302);
         $response->assertRedirect('/login');
+    }
+
+    public function test_unauthorised_user_post()
+    {
+        $user = User::factory()->create();
+        $user1 = User::factory()->create();
+        $post = BlogPost::create((['title' => 'title 1', 'body' => 'body 1', 'user_id' => $user->id]));
+
+        $this->be($user1);
+
+        $response = $this->get('/blog/'. $post->id .'/edit');
+        $response->assertStatus(403);
+    }
+
+    public function test_authorised_user_post()
+    {
+        $user = User::factory()->create();
+        $post = BlogPost::create((['title' => 'title 1', 'body' => 'body 1', 'user_id' => $user->id]));
+
+        $this->be($user);
+
+        $response = $this->get('/blog/'. $post->id .'/edit');
+        $response->assertStatus(200);
+        $response->assertSuccessful();
+        $response->assertViewIs('blog.edit');
     }
 
     public function test_unauthrorize_access_create_post()

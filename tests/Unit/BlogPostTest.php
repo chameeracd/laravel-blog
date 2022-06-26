@@ -28,7 +28,6 @@ class BlogPostTest extends TestCase
         $this->assertEquals($post->body, 'body 1');
     }
 
-
     public function test_user_posts()
     {
         $user = User::factory()->create();
